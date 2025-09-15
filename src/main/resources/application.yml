@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: local
+  application:
+    name: shcafe
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: none
