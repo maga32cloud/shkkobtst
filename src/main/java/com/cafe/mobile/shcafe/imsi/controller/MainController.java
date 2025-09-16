@@ -1,4 +1,4 @@
-package com.cafe.mobile.shcafe.controller;
+package com.cafe.mobile.shcafe.imsi.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,8 +1,8 @@
-package com.cafe.mobile.shcafe.service;
+package com.cafe.mobile.shcafe.imsi.service;
 
-import com.cafe.mobile.shcafe.dto.JoinDTO;
-import com.cafe.mobile.shcafe.entity.Members;
-import com.cafe.mobile.shcafe.repository.MemberRepository;
+import com.cafe.mobile.shcafe.imsi.dto.JoinDTO;
+import com.cafe.mobile.shcafe.imsi.entity.Members;
+import com.cafe.mobile.shcafe.imsi.repository.MemberRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.cafe.mobile.shcafe.entity;
+package com.cafe.mobile.shcafe.imsi.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

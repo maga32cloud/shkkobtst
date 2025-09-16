@@ -1,7 +1,7 @@
-package com.cafe.mobile.shcafe.controller;
+package com.cafe.mobile.shcafe.imsi.controller;
 
-import com.cafe.mobile.shcafe.dto.JoinDTO;
-import com.cafe.mobile.shcafe.service.JoinService;
+import com.cafe.mobile.shcafe.imsi.dto.JoinDTO;
+import com.cafe.mobile.shcafe.imsi.service.JoinService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 

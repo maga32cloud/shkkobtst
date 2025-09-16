@@ -1,6 +1,6 @@
-package com.cafe.mobile.shcafe.repository;
+package com.cafe.mobile.shcafe.imsi.repository;
 
-import com.cafe.mobile.shcafe.entity.Members;
+import com.cafe.mobile.shcafe.imsi.entity.Members;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +18,6 @@ public interface MemberRepository extends JpaRepository<Members, Integer> {
                )
         """, nativeQuery = true)
     int existsOrRecentlyWithdrawn(@Param("phoneNumber") String phoneNumber);
+
+    Members findByPhoneNumber(String phoneNumber);
 }

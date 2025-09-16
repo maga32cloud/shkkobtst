@@ -1,4 +1,4 @@
-package com.cafe.mobile.shcafe.dto;
+package com.cafe.mobile.shcafe.imsi.dto;
 
 import lombok.Getter;
 import lombok.Setter;
