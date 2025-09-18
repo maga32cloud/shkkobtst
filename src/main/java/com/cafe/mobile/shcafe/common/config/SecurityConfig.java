@@ -1,6 +1,7 @@
 package com.cafe.mobile.shcafe.common.config;
 
 import com.cafe.mobile.shcafe.common.jwt.JwtAuthenticationFilter;
+import com.cafe.mobile.shcafe.common.jwt.JwtPassingURI;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -42,8 +43,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)      // csrf disable
                 .formLogin(AbstractHttpConfigurer::disable) // Form 로그인 방식 disable
                 .httpBasic(AbstractHttpConfigurer::disable) // http basic 인증 방식 disable
-                .authorizeHttpRequests((auth) -> auth   // 경로별 인가 작업
-                        .requestMatchers("/api/*/member", "/api/*/member/login").permitAll()
+                .authorizeHttpRequests((auth) -> auth       // 경로별 인가 작업
+                        .requestMatchers(JwtPassingURI.PUBLIC_URIS).permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
                 )

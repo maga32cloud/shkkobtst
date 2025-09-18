@@ -6,12 +6,12 @@ import lombok.Getter;
 @Getter
 @Builder
 public class AppResponse<T> {
-    // response code
+    // response 코드
     private String code;
 
-    // resonse message
+    // resonse 메세지
     private String message;
 
-    // response data
+    // response 데이터
     private T data;
 }

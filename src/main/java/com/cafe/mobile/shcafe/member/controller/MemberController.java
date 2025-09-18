@@ -2,13 +2,17 @@ package com.cafe.mobile.shcafe.member.controller;
 
 import com.cafe.mobile.shcafe.common.model.AppResponse;
 import com.cafe.mobile.shcafe.common.type.ResponseType;
-import com.cafe.mobile.shcafe.member.dto.MemberSignUpRequest;
+import com.cafe.mobile.shcafe.member.dto.request.MemberCancelWithdrawRequest;
+import com.cafe.mobile.shcafe.member.dto.request.MemberLoginRequest;
+import com.cafe.mobile.shcafe.member.dto.request.MemberSignUpRequest;
+import com.cafe.mobile.shcafe.member.dto.request.MemberWithdrawRequest;
+import com.cafe.mobile.shcafe.member.dto.response.MemberSignUpResponse;
+import com.cafe.mobile.shcafe.member.dto.response.MemberWithdrawResponse;
 import com.cafe.mobile.shcafe.member.service.MemberService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/member")
 @RestController
@@ -20,13 +24,45 @@ public class MemberController {
         this.memberService = memberService;
     }
 
+    // 회원가입
     @PostMapping
-    public ResponseEntity<AppResponse<Boolean>> signUp(@RequestBody MemberSignUpRequest request) {
+    public ResponseEntity<AppResponse> signUp(@RequestBody @Valid MemberSignUpRequest request) {
 
-        memberService.signUp(request);
+        MemberSignUpResponse member = memberService.signUp(request);
 
-        return ResponseEntity.ok(AppResponse.<Boolean>builder()
+        return ResponseEntity.ok(AppResponse.builder()
+                .code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message()).data(member)
+                .build());
+    }
+
+    // 로그인
+    @PostMapping("/login")
+    public ResponseEntity<AppResponse> login(@RequestBody @Valid MemberLoginRequest request) {
+        String accessToken = memberService.login(request);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
+                .body(AppResponse.builder().code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message())
+                .build());
+    }
+
+    // 탈퇴신청
+    @PutMapping("/withdraw/{memberId}")
+    public ResponseEntity<AppResponse> withdraw(@PathVariable String memberId, @RequestBody @Valid MemberWithdrawRequest request) {
+        MemberWithdrawResponse member = memberService.withdraw(memberId, request);
+
+        return ResponseEntity.ok(AppResponse.builder()
+                .code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message()).data(member)
+                .build());
+    }
+
+    // 탈퇴 철회
+    @PutMapping("/cancelWithdraw/{memberId}")
+    public ResponseEntity<AppResponse> cancelWithdraw(@PathVariable String memberId, @RequestBody @Valid MemberCancelWithdrawRequest request) {
+        memberService.cancelWithdraw(memberId, request);
+
+        return ResponseEntity.ok(AppResponse.builder()
                 .code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message())
-                .data(true).build());
+                .build());
     }
 }
