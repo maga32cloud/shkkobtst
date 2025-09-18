@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<AppResponse> handleValidationException(HttpMessageNotReadableException exception) {
         if (exception.getCause() instanceof MismatchedInputException mismatchedInputException) {
-            log.debug("잘못된 파라미터 : ", exception);
+            log.debug("잘못된 파라미터 : {}", exception.getMessage());
             // 오류항목, 메세지 전달
             return createResponseEntity(HttpStatus.BAD_REQUEST, ResponseType.INVALID_ARGUMENT.code(), ResponseType.INVALID_ARGUMENT.message()
                     , mismatchedInputException.getPath().get(0).getFieldName()
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
     // 비즈니스 예외
     @ExceptionHandler(BizException.class)
     public ResponseEntity<AppResponse> handleBizException(BizException exception) {
-        log.debug("BIZ 예외 발생 : ", exception);
+        log.debug("BIZ 예외 발생 : {}", exception.getMessage());
         return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, exception.getCode(), exception.getMessage());
     }
 }
