@@ -26,42 +26,42 @@ public class MemberController {
 
     // 회원가입
     @PostMapping
-    public ResponseEntity<AppResponse> signUp(@RequestBody @Valid MemberSignUpRequest request) {
+    public ResponseEntity<AppResponse<MemberSignUpResponse>> signUp(@RequestBody @Valid MemberSignUpRequest request) {
 
         MemberSignUpResponse member = memberService.signUp(request);
 
-        return ResponseEntity.ok(AppResponse.builder()
+        return ResponseEntity.ok(AppResponse.<MemberSignUpResponse>builder()
                 .code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message()).data(member)
                 .build());
     }
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<AppResponse> login(@RequestBody @Valid MemberLoginRequest request) {
+    public ResponseEntity<AppResponse<Void>> login(@RequestBody @Valid MemberLoginRequest request) {
         String accessToken = memberService.login(request);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
-                .body(AppResponse.builder().code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message())
+                .body(AppResponse.<Void>builder().code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message())
                 .build());
     }
 
     // 탈퇴신청
     @PutMapping("/withdraw/{memberId}")
-    public ResponseEntity<AppResponse> withdraw(@PathVariable String memberId, @RequestBody @Valid MemberWithdrawRequest request) {
+    public ResponseEntity<AppResponse<MemberWithdrawResponse>> withdraw(@PathVariable String memberId, @RequestBody @Valid MemberWithdrawRequest request) {
         MemberWithdrawResponse member = memberService.withdraw(memberId, request);
 
-        return ResponseEntity.ok(AppResponse.builder()
+        return ResponseEntity.ok(AppResponse.<MemberWithdrawResponse>builder()
                 .code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message()).data(member)
                 .build());
     }
 
     // 탈퇴 철회
     @PutMapping("/cancelWithdraw/{memberId}")
-    public ResponseEntity<AppResponse> cancelWithdraw(@PathVariable String memberId, @RequestBody @Valid MemberCancelWithdrawRequest request) {
+    public ResponseEntity<AppResponse<Void>> cancelWithdraw(@PathVariable String memberId, @RequestBody @Valid MemberCancelWithdrawRequest request) {
         memberService.cancelWithdraw(memberId, request);
 
-        return ResponseEntity.ok(AppResponse.builder()
+        return ResponseEntity.ok(AppResponse.<Void>builder()
                 .code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message())
                 .build());
     }

@@ -3,7 +3,7 @@ package com.cafe.mobile.shcafe.member.service;
 import com.cafe.mobile.shcafe.common.exception.AlreadyExistsException;
 import com.cafe.mobile.shcafe.common.exception.BizException;
 import com.cafe.mobile.shcafe.common.jwt.JwtUtil;
-import com.cafe.mobile.shcafe.common.type.MemStsCdConst;
+import com.cafe.mobile.shcafe.common.type.MemberStsCdConst;
 import com.cafe.mobile.shcafe.common.type.ResponseType;
 import com.cafe.mobile.shcafe.member.dto.request.MemberCancelWithdrawRequest;
 import com.cafe.mobile.shcafe.member.dto.request.MemberLoginRequest;
@@ -61,11 +61,11 @@ public class MemberServiceImpl implements MemberService {
             throw new BizException("비밀번호가 일치하지 않습니다.");
         }
 
-        String memStsCd = member.getMemStsCd();
+        String memberStsCd = member.getMemberStsCd();
 
-        switch (memStsCd) {
-            case MemStsCdConst.WITHDRAWN -> throw new BizException(ResponseType.WITHDRAWN_MEMBER); // 탈퇴 회원
-            case MemStsCdConst.WITHDRAWING -> throw new BizException(ResponseType.WITHDRAWING_PROGRESS); // 탈퇴 진행중 회원
+        switch (memberStsCd) {
+            case MemberStsCdConst.WITHDRAWN -> throw new BizException(ResponseType.WITHDRAWN_MEMBER); // 탈퇴 회원
+            case MemberStsCdConst.WITHDRAWING -> throw new BizException(ResponseType.WITHDRAWING_PROGRESS); // 탈퇴 진행중 회원
         }
 
         return jwtUtil.createJwt(member.getMemberId(), "USER");
@@ -82,7 +82,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // 정상 상태 멤버 불러오기
-        Member member = memberRepository.findByMemberIdAndMemStsCd(memberId, MemStsCdConst.ACTIVE)
+        Member member = memberRepository.findByMemberIdAndMemberStsCd(memberId, MemberStsCdConst.ACTIVE)
                 .orElseThrow(() -> new BizException(ResponseType.BAD_REQUEST));
 
         // 비밀번호 검증
@@ -90,7 +90,7 @@ public class MemberServiceImpl implements MemberService {
             throw new BizException("비밀번호가 일치하지 않습니다.");
         }
 
-        member.setMemStsCd(MemStsCdConst.WITHDRAWING);
+        member.setMemberStsCd(MemberStsCdConst.WITHDRAWING);
         member.setClsDt(LocalDate.now());
 
         memberRepository.save(member);
@@ -106,7 +106,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void cancelWithdraw(String memberId, MemberCancelWithdrawRequest request) {
         // 탈퇴대기 상태 멤버 불러오기
-        Member member = memberRepository.findByMemberIdAndMemStsCd(memberId, MemStsCdConst.WITHDRAWING)
+        Member member = memberRepository.findByMemberIdAndMemberStsCd(memberId, MemberStsCdConst.WITHDRAWING)
                 .orElseThrow(() -> new BizException(ResponseType.BAD_REQUEST));
 
         // 비밀번호 검증
@@ -114,7 +114,7 @@ public class MemberServiceImpl implements MemberService {
             throw new BizException("비밀번호가 일치하지 않습니다.");
         }
 
-        member.setMemStsCd(MemStsCdConst.ACTIVE);
+        member.setMemberStsCd(MemberStsCdConst.ACTIVE);
         member.setClsDt(null);
 
         memberRepository.save(member);
@@ -125,7 +125,7 @@ public class MemberServiceImpl implements MemberService {
     public void checkDuplicatedMember(MemberSignUpRequest request) {
         // 탈퇴 상태가 아닌 회원 정보 검색
         Optional<Member> duplicate = memberRepository.findMemberNotResigned(
-                request.getMemberId(), request.getEmail(), request.getTelNo(), MemStsCdConst.WITHDRAWN
+                request.getMemberId(), request.getEmail(), request.getTelNo(), MemberStsCdConst.WITHDRAWN
         );
 
         if (duplicate.isPresent()) {

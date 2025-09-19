@@ -41,16 +41,16 @@ public class Member {
     @Column(nullable = false)
     private LocalDate birthDt; // 생년월일
 
+    @ColumnDefault("'00'")
+    @Setter
+    @Column(nullable = false)
+    private String memberStsCd; // 회원상태코드
+
     @Column(nullable = false, updatable = false)
     private LocalDate regDt; // 가입일자
 
     @Column()
     @Setter
     private LocalDate clsDt; // 탈퇴일자
-
-    @ColumnDefault("'00'")
-    @Setter
-    @Column(nullable = false)
-    private String memStsCd; // 회원상태코드
 
 }

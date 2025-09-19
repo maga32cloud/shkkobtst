@@ -1,6 +1,6 @@
 package com.cafe.mobile.shcafe.batch.scheduler;
 
-import com.cafe.mobile.shcafe.common.type.MemStsCdConst;
+import com.cafe.mobile.shcafe.common.type.MemberStsCdConst;
 import com.cafe.mobile.shcafe.member.entity.Member;
 import com.cafe.mobile.shcafe.member.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -31,10 +31,10 @@ public class MemberScheduler {
         try {
             LocalDate limitDays = LocalDate.now().minusDays(30);
 
-            List<Member> expiredMembers = memberRepository.findWithdrawingMember(limitDays, MemStsCdConst.WITHDRAWING);
+            List<Member> expiredMembers = memberRepository.findWithdrawingMember(limitDays, MemberStsCdConst.WITHDRAWING);
 
             for (Member member : expiredMembers) {
-                member.setMemStsCd(MemStsCdConst.WITHDRAWN); // 탈퇴 상태 갱신
+                member.setMemberStsCd(MemberStsCdConst.WITHDRAWN); // 탈퇴 상태 갱신
                 member.setClsDt(LocalDate.now()); // 최종 탈퇴일자 갱신
             }
 

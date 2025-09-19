@@ -16,16 +16,16 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     @Query("select m " +
             "from Member m " +
             "where m.memberId = :memberId " +
-            "or (m.memStsCd <> :memStsCd and (m.email = :email or m.telNo = :telNo))"
+            "or (m.memberStsCd <> :memberStsCd and (m.email = :email or m.telNo = :telNo))"
     )
-    Optional<Member> findMemberNotResigned(@Param("memberId") String memberId, @Param("email") String email, @Param("telNo") String telNo, @Param("memStsCd") String memStsCd);
+    Optional<Member> findMemberNotResigned(@Param("memberId") String memberId, @Param("email") String email, @Param("telNo") String telNo, @Param("memberStsCd") String memberStsCd);
 
-    Optional<Member> findByMemberIdAndMemStsCd(String memberId, String memStsCd);
+    Optional<Member> findByMemberIdAndMemberStsCd(String memberId, String memberStsCd);
 
     @Query("select m " +
             "from Member m " +
-            "where m.memStsCd = :memStsCd " +
+            "where m.memberStsCd = :memberStsCd " +
             "and m.clsDt <= :limitDays"
     )
-    List<Member> findWithdrawingMember(LocalDate limitDays, String memStsCd);
+    List<Member> findWithdrawingMember(LocalDate limitDays, String memberStsCd);
 }
