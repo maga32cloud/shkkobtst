@@ -65,4 +65,10 @@ public class MemberController {
                 .code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message())
                 .build());
     }
+
+    /*
+    TODO:
+     사용자조회
+     사용자업데이트 : 회원이력 작성
+     */
 }

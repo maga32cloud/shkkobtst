@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -18,4 +19,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "order by p.displayOrder"
     )
     List<Product> findUseYnProducts(@Param("categoryId") Long categoryId, @Param("useYn") String useYn);
+
+    Optional<Product> findByProductIdAndUseYn(Long productId, String useYn);
 }

@@ -50,4 +50,10 @@ public class ProductController {
                 .code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message()).data(products)
                 .build());
     }
+
+    /*
+    TODO:
+     (관리자)상품생성 : product - insert, product_history - insert
+     (관리자)상품업데이트 : product - insert, product_history - insert 및 사용중이던 로우 cls_dtm 업데이트
+     */
 }

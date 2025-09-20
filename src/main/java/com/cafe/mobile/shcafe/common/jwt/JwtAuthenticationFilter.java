@@ -51,6 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 // TODO: 토큰 만료시 refreshToken으로 재설정 필요
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json; charset=UTF-8");
                 response.getWriter().write("{\"code\":\"401\",\"message\":\"Token expired\"}");
                 return;
             }

@@ -5,22 +5,30 @@ import com.cafe.mobile.shcafe.product.dto.response.CategoryResponse;
 import com.cafe.mobile.shcafe.product.dto.response.ProductResponse;
 import com.cafe.mobile.shcafe.product.entity.Category;
 import com.cafe.mobile.shcafe.product.entity.Product;
+import com.cafe.mobile.shcafe.product.entity.ProductHistory;
 import com.cafe.mobile.shcafe.product.repository.CategoryRepository;
+import com.cafe.mobile.shcafe.product.repository.ProductHistoryRepository;
 import com.cafe.mobile.shcafe.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
+    private final ProductHistoryRepository productHistoryRepository;
 
-    public ProductServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository) {
+    public ProductServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, ProductHistoryRepository productHistoryRepository) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
+        this.productHistoryRepository = productHistoryRepository;
     }
 
     @Override
@@ -71,5 +79,18 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return categoryProducts;
+    }
+
+    // 존재상품 검색
+    @Override
+    public Optional<Product> findByProductIdAndUseYn(Long productId, String useYn) {
+        return productRepository.findByProductIdAndUseYn(productId, useYn);
+    }
+
+    // 특정시점 상품이력 존재상품 검색
+    @Override
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public Optional<ProductHistory> findProductInfoAtTimeUseYn(Long productId, LocalDateTime time, String useYn) {
+        return productHistoryRepository.findProductInfoAtTimeUseYn(productId, time, useYn);
     }
 }

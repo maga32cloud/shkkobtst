@@ -1,5 +1,7 @@
 package com.cafe.mobile.shcafe.common.jwt;
 
+import com.cafe.mobile.shcafe.common.exception.BizException;
+import com.cafe.mobile.shcafe.common.type.ResponseType;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,7 +63,7 @@ public class JwtUtil {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || authentication.getPrincipal() == null) {
-            return "";
+            throw new BizException(ResponseType.NEED_LOGIN);
         }
 
         return authentication.getPrincipal().toString();

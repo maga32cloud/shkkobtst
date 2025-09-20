@@ -6,6 +6,7 @@ import com.cafe.mobile.shcafe.member.dto.request.MemberSignUpRequest;
 import com.cafe.mobile.shcafe.member.dto.request.MemberWithdrawRequest;
 import com.cafe.mobile.shcafe.member.dto.response.MemberSignUpResponse;
 import com.cafe.mobile.shcafe.member.dto.response.MemberWithdrawResponse;
+import com.cafe.mobile.shcafe.member.entity.Member;
 
 public interface MemberService {
     MemberSignUpResponse signUp(MemberSignUpRequest dto);
@@ -15,4 +16,6 @@ public interface MemberService {
     MemberWithdrawResponse withdraw(String memberId, MemberWithdrawRequest request);
 
     void cancelWithdraw(String memberId, MemberCancelWithdrawRequest request);
+
+    Member validateActiveMemberByMemberId(String memberId);
 }

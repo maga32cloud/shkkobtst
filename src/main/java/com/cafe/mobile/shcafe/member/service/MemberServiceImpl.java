@@ -76,14 +76,12 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public MemberWithdrawResponse withdraw(String memberId, MemberWithdrawRequest request) {
         // 본인 여부 검증
-        String currentMemberId = jwtUtil.getCurrentMemberId();
-        if (!currentMemberId.equals(memberId)) {
+        if (!memberId.equals(jwtUtil.getCurrentMemberId())) {
             throw new BizException(ResponseType.NOT_ALLOWED);
         }
 
-        // 정상 상태 멤버 불러오기
-        Member member = memberRepository.findByMemberIdAndMemberStsCd(memberId, MemberStsCdConst.ACTIVE)
-                .orElseThrow(() -> new BizException(ResponseType.BAD_REQUEST));
+        // 정상 상태 멤버 검증
+        Member member = validateActiveMemberByMemberId(memberId);
 
         // 비밀번호 검증
         if (!bCryptPasswordEncoder.matches(request.getPassword(), member.getPassword())) {
@@ -120,6 +118,19 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    // 회원ID로 정상회원 검증
+    @Override
+    public Member validateActiveMemberByMemberId(String memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BizException(ResponseType.NOT_EXIST_MEMBER));
+
+        switch (member.getMemberStsCd()) {
+            case MemberStsCdConst.WITHDRAWN -> throw new BizException(ResponseType.WITHDRAWN_MEMBER); // 탈퇴 회원
+            case MemberStsCdConst.WITHDRAWING -> throw new BizException(ResponseType.WITHDRAWING_PROGRESS); // 탈퇴 진행중 회원
+        }
+
+        return member;
+    }
 
     // 회원가입 중복체크
     public void checkDuplicatedMember(MemberSignUpRequest request) {

@@ -8,10 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "member", uniqueConstraints = {
-        @UniqueConstraint(name = "EMAIL_UNIQUE", columnNames = "email"),
-        @UniqueConstraint(name = "MEM_ID_UNIQUE", columnNames = "mem_id")
-})
+@Table(name = "member")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
