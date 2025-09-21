@@ -27,7 +27,6 @@ public class MemberController {
     // 회원가입
     @PostMapping
     public ResponseEntity<AppResponse<MemberSignUpResponse>> signUp(@RequestBody @Valid MemberSignUpRequest request) {
-
         MemberSignUpResponse member = memberService.signUp(request);
 
         return ResponseEntity.ok(AppResponse.<MemberSignUpResponse>builder()
@@ -46,7 +45,7 @@ public class MemberController {
                 .build());
     }
 
-    // 탈퇴신청
+    // 탈퇴 신청
     @PutMapping("/withdraw/{memberId}")
     public ResponseEntity<AppResponse<MemberWithdrawResponse>> withdraw(@PathVariable String memberId, @RequestBody @Valid MemberWithdrawRequest request) {
         MemberWithdrawResponse member = memberService.withdraw(memberId, request);

@@ -36,6 +36,7 @@ public class Orders {
     @ColumnDefault("0")
     private Integer totalAmount; // 총금액
 
+    @Setter
     @Column(nullable = false)
     @ColumnDefault("'00'")
     private String orderStsCd; // 주문상태코드

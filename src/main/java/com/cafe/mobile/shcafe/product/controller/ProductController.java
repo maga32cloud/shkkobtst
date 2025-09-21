@@ -28,6 +28,7 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<AppResponse<List<AllProductResponse>>> getAllProduct() {
         List<AllProductResponse> allProduct = productService.getAllProduct();
+
         return ResponseEntity.ok(AppResponse.<List<AllProductResponse>>builder()
                 .code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message()).data(allProduct)
                 .build());
@@ -37,6 +38,7 @@ public class ProductController {
     @GetMapping("/category")
     public ResponseEntity<AppResponse<List<CategoryResponse>>> getAllCategories() {
         List<CategoryResponse> allCategories = productService.getAllCategories();
+
         return ResponseEntity.ok(AppResponse.<List<CategoryResponse>>builder()
                 .code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message()).data(allCategories)
                 .build());
@@ -46,6 +48,7 @@ public class ProductController {
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<AppResponse<List<ProductResponse>>> getProductsByCategory(@PathVariable Long categoryId) {
         List<ProductResponse> products = productService.getProductsByCategory(categoryId);
+
         return ResponseEntity.ok(AppResponse.<List<ProductResponse>>builder()
                 .code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message()).data(products)
                 .build());

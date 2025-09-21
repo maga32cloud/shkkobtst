@@ -17,7 +17,15 @@ public enum ResponseType {
     WITHDRAWN_MEMBER("B099", "탈퇴한 회원입니다."),
     // 상품관련
     INVALID_PRODUCT("B204", "판매하지 않는 상품입니다."),
-    NOT_MATCHED_PRICE("B205", "현재 상품과 가격정보가 일치히지 않습니다."),
+    ORDER_PRICE_MISMATCH("B205", "현재 상품과 가격정보가 일치히지 않습니다."),
+    // 주문관련
+    INVALID_ORDER("B304", "존재하지 않는 주문입니다."),
+    // 결제관련
+    PAY_PENDING("B400", "결제가 진행중입니다."),
+    PAY_IN_PROGRESS("B409", "이미 결제가 진행중인 내역입니다."),
+    ALREADY_PAID("B410", "이미 결제된 내역입니다."),
+    PAY_CANCELED("B490", "취소된 결제입니다."),
+    PAY_PRICE_MISMATCH("B405", "결제 금액과 주문 금액이 일치하지 않습니다."),
 
     ERROR("999", "오류가 발생했습니다.")
     ;

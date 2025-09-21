@@ -13,12 +13,14 @@ import com.cafe.mobile.shcafe.order.repository.OrderRepository;
 import com.cafe.mobile.shcafe.product.entity.Product;
 import com.cafe.mobile.shcafe.product.entity.ProductHistory;
 import com.cafe.mobile.shcafe.product.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -83,6 +85,21 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 
+    // ID로 찾기
+    @Override
+    public Optional<Orders> findById(Long orderId) {
+        return orderRepository.findById(orderId);
+    }
+
+    // 주문상태변경
+    @Override
+    public void transOrderStatus(Long orderId, String orderStsCd) {
+        orderRepository.findById(orderId).ifPresentOrElse(
+            order -> order.setOrderStsCd(orderStsCd),
+            () -> log.warn("주문ID {} 이 존재하지 않아 상태 변경 실패", orderId)
+        );
+    }
+
     // 상품 가격 검증: ProductHistory -> Product db와 비교
     private void validateProductPrice(Product product, Integer requestPrice, LocalDateTime orderTime) {
         Integer realPrice = 0;
@@ -99,7 +116,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         if (!realPrice.equals(requestPrice)) {
-            throw new BizException(ResponseType.NOT_MATCHED_PRICE);
+            throw new BizException(ResponseType.ORDER_PRICE_MISMATCH);
         }
     }
 }
