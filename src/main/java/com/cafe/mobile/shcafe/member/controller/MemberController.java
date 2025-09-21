@@ -9,6 +9,11 @@ import com.cafe.mobile.shcafe.member.dto.request.MemberWithdrawRequest;
 import com.cafe.mobile.shcafe.member.dto.response.MemberSignUpResponse;
 import com.cafe.mobile.shcafe.member.dto.response.MemberWithdrawResponse;
 import com.cafe.mobile.shcafe.member.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/member")
 @RestController
+@Tag(name = "회원 관리", description = "회원 가입, 로그인, 탈퇴 관련 API")
 public class MemberController {
 
     private final MemberService memberService;
@@ -24,7 +30,12 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    // 회원가입
+    @Operation(summary = "회원가입", description = "새로운 회원을 등록합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원가입 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "409", description = "이미 존재하는 회원")
+    })
     @PostMapping
     public ResponseEntity<AppResponse<MemberSignUpResponse>> signUp(@RequestBody @Valid MemberSignUpRequest request) {
         MemberSignUpResponse member = memberService.signUp(request);
@@ -34,7 +45,12 @@ public class MemberController {
                 .build());
     }
 
-    // 로그인
+    @Operation(summary = "로그인", description = "회원 로그인을 수행하고 JWT 토큰을 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그인 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "401", description = "인증 실패")
+    })
     @PostMapping("/login")
     public ResponseEntity<AppResponse<Void>> login(@RequestBody @Valid MemberLoginRequest request) {
         String accessToken = memberService.login(request);
@@ -45,9 +61,16 @@ public class MemberController {
                 .build());
     }
 
-    // 탈퇴 신청
+    @Operation(summary = "탈퇴 신청", description = "회원 탈퇴를 신청합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "탈퇴 신청 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음")
+    })
     @PutMapping("/withdraw/{memberId}")
-    public ResponseEntity<AppResponse<MemberWithdrawResponse>> withdraw(@PathVariable String memberId, @RequestBody @Valid MemberWithdrawRequest request) {
+    public ResponseEntity<AppResponse<MemberWithdrawResponse>> withdraw(
+            @Parameter(description = "회원 ID", required = true) @PathVariable String memberId, 
+            @RequestBody @Valid MemberWithdrawRequest request) {
         MemberWithdrawResponse member = memberService.withdraw(memberId, request);
 
         return ResponseEntity.ok(AppResponse.<MemberWithdrawResponse>builder()
@@ -55,9 +78,16 @@ public class MemberController {
                 .build());
     }
 
-    // 탈퇴 철회
+    @Operation(summary = "탈퇴 철회", description = "회원 탈퇴 신청을 철회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "탈퇴 철회 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음")
+    })
     @PutMapping("/cancelWithdraw/{memberId}")
-    public ResponseEntity<AppResponse<Void>> cancelWithdraw(@PathVariable String memberId, @RequestBody @Valid MemberCancelWithdrawRequest request) {
+    public ResponseEntity<AppResponse<Void>> cancelWithdraw(
+            @Parameter(description = "회원 ID", required = true) @PathVariable String memberId, 
+            @RequestBody @Valid MemberCancelWithdrawRequest request) {
         memberService.cancelWithdraw(memberId, request);
 
         return ResponseEntity.ok(AppResponse.<Void>builder()

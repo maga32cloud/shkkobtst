@@ -15,5 +15,5 @@ out/
 **/src/test/**/out/
 
 #properties
-*dev.yml
+#*dev.yml
 *prod.yml

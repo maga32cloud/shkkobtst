@@ -6,6 +6,11 @@ import com.cafe.mobile.shcafe.product.dto.response.AllProductResponse;
 import com.cafe.mobile.shcafe.product.dto.response.CategoryResponse;
 import com.cafe.mobile.shcafe.product.dto.response.ProductResponse;
 import com.cafe.mobile.shcafe.product.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +21,7 @@ import java.util.List;
 
 @RequestMapping("/api/v1/product")
 @RestController
+@Tag(name = "상품 관리", description = "상품 조회 관련 API")
 public class ProductController {
 
     private final ProductService productService;
@@ -24,7 +30,11 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // 전체메뉴 조회
+    @Operation(summary = "전체 메뉴 조회", description = "모든 상품을 카테고리별로 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
     @GetMapping
     public ResponseEntity<AppResponse<List<AllProductResponse>>> getAllProduct() {
         List<AllProductResponse> allProduct = productService.getAllProduct();
@@ -34,7 +44,11 @@ public class ProductController {
                 .build());
     }
 
-    // 카테고리 조회
+    @Operation(summary = "카테고리 조회", description = "모든 상품 카테고리를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
     @GetMapping("/category")
     public ResponseEntity<AppResponse<List<CategoryResponse>>> getAllCategories() {
         List<CategoryResponse> allCategories = productService.getAllCategories();
@@ -44,9 +58,15 @@ public class ProductController {
                 .build());
     }
 
-    // 카테고리별 상품 조회
+    @Operation(summary = "카테고리별 상품 조회", description = "특정 카테고리의 상품들을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+            @ApiResponse(responseCode = "404", description = "카테고리를 찾을 수 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<AppResponse<List<ProductResponse>>> getProductsByCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<AppResponse<List<ProductResponse>>> getProductsByCategory(
+            @Parameter(description = "카테고리 ID", required = true) @PathVariable Long categoryId) {
         List<ProductResponse> products = productService.getProductsByCategory(categoryId);
 
         return ResponseEntity.ok(AppResponse.<List<ProductResponse>>builder()
