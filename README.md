@@ -121,6 +121,10 @@ $ ./gradlew clean build
 $ java -jar build/libs/shcafe-0.0.1-SNAPSHOT.jar
 ```
 
+```
+swegger로 확인하기 ->  http://localhost:8080/swagger-ui/index.html
+```
+
 ## 📁 프로젝트 구조
 
 ```
