@@ -39,6 +39,11 @@ public class PaymentServiceImpl implements PaymentService {
         this.jwtUtil = jwtUtil;
     }
 
+    /**
+     * 결제 생성
+     * @param request
+     * @return PaymentCreateResponse
+     */
     @Override
     public PaymentCreateResponse createPayment(PaymentCreateRequest request) {
         // Jwt ID로 회원 존재 여부 확인
@@ -124,7 +129,11 @@ public class PaymentServiceImpl implements PaymentService {
 
     }
 
-    // 결제 mock(Transaction Exeption 전파 분리)
+    /**
+     * Mock 결제 테스트 샘플
+     * @param payment
+     * @return String
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public String mockPaymentTest(Payment payment) {
@@ -135,12 +144,22 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
+    /**
+     * 주문 ID로 최신 결제 조회
+     * @param paymentId
+     * @return Optional<Payment>
+     */
     @Override
     @Transactional
     public Optional<Payment> findTopByOrderOrderIdOrderByPaymentIdDesc(Long paymentId) {
         return paymentRepository.findTopByOrderOrderIdOrderByPaymentIdDesc(paymentId);
     }
 
+    /**
+     * 결제 저장
+     * @param payment
+     * @return Payment
+     */
     @Override
     @Transactional
     public Payment save(Payment payment) {

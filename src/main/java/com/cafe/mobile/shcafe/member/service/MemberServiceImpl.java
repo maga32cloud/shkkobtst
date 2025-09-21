@@ -33,7 +33,11 @@ public class MemberServiceImpl implements MemberService {
         this.jwtUtil = jwtUtil;
     }
 
-    // 회원가입
+    /**
+     * 회원가입 처리
+     * @param request
+     * @return MemberSignUpResponse
+     */
     @Override
     public MemberSignUpResponse signUp(MemberSignUpRequest request) {
         // 중복 체크
@@ -51,7 +55,11 @@ public class MemberServiceImpl implements MemberService {
                 .build();
     }
 
-    // 로그인
+    /**
+     * 회원 로그인 처리
+     * @param request
+     * @return JWT 토큰 문자열 헤더
+     */
     @Override
     public String login(MemberLoginRequest request) {
         Member member = memberRepository.findById(request.getMemberId())
@@ -71,7 +79,12 @@ public class MemberServiceImpl implements MemberService {
         return jwtUtil.createJwt(member.getMemberId(), "USER");
     }
 
-    // 탈퇴신청
+    /**
+     * 회원 탈퇴신청 처리
+     * @param memberId
+     * @param request
+     * @return MemberWithdrawResponse
+     */
     @Override
     @Transactional
     public MemberWithdrawResponse withdraw(String memberId, MemberWithdrawRequest request) {
@@ -99,7 +112,12 @@ public class MemberServiceImpl implements MemberService {
                 .build();
     }
 
-    // 탈퇴신청 취소
+    /**
+     * 회원 탈퇴신청 취소
+     * @param memberId 탈퇴취소할 회원 ID
+     * @param request 탈퇴취소 요청 정보 (비밀번호)
+     * @throws BizException 탈퇴 진행중이 아닌 회원이거나 비밀번호가 일치하지 않는 경우
+     */
     @Override
     @Transactional
     public void cancelWithdraw(String memberId, MemberCancelWithdrawRequest request) {
@@ -118,7 +136,11 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
-    // 회원ID로 정상회원 검증
+    /**
+     * 회원 ID로 정상 상태 회원 검증 후 반환
+     * @param memberId 검증할 회원 ID
+     * @return Member 검증된 회원 엔티티
+     */
     @Override
     public Member validateActiveMemberByMemberId(String memberId) {
         Member member = memberRepository.findById(memberId)
@@ -132,8 +154,11 @@ public class MemberServiceImpl implements MemberService {
         return member;
     }
 
-    // 회원가입 중복체크
-    public void checkDuplicatedMember(MemberSignUpRequest request) {
+    /**
+     * 회원가입 시 중복 정보 체크
+     * @param request 회원가입 요청 정보
+     */
+    private void checkDuplicatedMember(MemberSignUpRequest request) {
         // 탈퇴 상태가 아닌 회원 정보 검색
         Optional<Member> duplicate = memberRepository.findMemberNotResigned(
                 request.getMemberId(), request.getEmail(), request.getTelNo(), MemberStsCdConst.WITHDRAWN

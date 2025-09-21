@@ -41,6 +41,11 @@ public class OrderServiceImpl implements OrderService {
         this.jwtUtil = jwtUtil;
     }
 
+    /**
+     * 주문 생성
+     * @param request
+     * @return OrderCreateResponse
+     */
     @Override
     @Transactional
     public OrderCreateResponse createOrder(OrderCreateRequest request) {
@@ -90,7 +95,10 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 
-    // 주문 취소
+    /**
+     * 주문 취소
+     * @param orderId
+     */
     @Override
     @Transactional
     public void cancelOrder(Long orderId) {
@@ -127,13 +135,21 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    // ID로 찾기
+    /**
+     * 주문 ID로 주문 조회
+     * @param orderId
+     * @return Optional<Orders>
+     */
     @Override
     public Optional<Orders> findById(Long orderId) {
         return orderRepository.findById(orderId);
     }
 
-    // 주문상태변경
+    /**
+     * 주문 상태 변경
+     * @param orderId
+     * @param orderStsCd
+     */
     @Override
     @Transactional
     public void transOrderStatus(Long orderId, String orderStsCd) {
@@ -143,7 +159,12 @@ public class OrderServiceImpl implements OrderService {
         );
     }
 
-    // 상품 가격 검증: ProductHistory -> Product db와 비교
+    /**
+     * 상품 가격 검증
+     * @param product
+     * @param requestPrice
+     * @param orderTime
+     */
     private void validateProductPrice(Product product, Integer requestPrice, LocalDateTime orderTime) {
         Integer realPrice = 0;
         try {

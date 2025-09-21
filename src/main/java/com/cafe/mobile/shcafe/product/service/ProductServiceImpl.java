@@ -31,6 +31,10 @@ public class ProductServiceImpl implements ProductService {
         this.productHistoryRepository = productHistoryRepository;
     }
 
+    /**
+     * 전체 상품 조회
+     * @return List<AllProductResponse>
+     */
     @Override
     public List<AllProductResponse> getAllProduct() {
         List<AllProductResponse> allProduct = new ArrayList<>();
@@ -53,6 +57,10 @@ public class ProductServiceImpl implements ProductService {
         return allProduct;
     }
 
+    /**
+     * 전체 카테고리 조회
+     * @return List<CategoryResponse>
+     */
     @Override
     public List<CategoryResponse> getAllCategories() {
         List<CategoryResponse> allCategories = new ArrayList<>();
@@ -67,6 +75,11 @@ public class ProductServiceImpl implements ProductService {
         return allCategories;
     };
 
+    /**
+     * 카테고리별 상품 조회
+     * @param categoryId
+     * @return List<ProductResponse>
+     */
     @Override
     public List<ProductResponse> getProductsByCategory(Long categoryId) {
         List<ProductResponse> categoryProducts = new ArrayList<>();
@@ -81,13 +94,24 @@ public class ProductServiceImpl implements ProductService {
         return categoryProducts;
     }
 
-    // 존재상품 검색
+    /**
+     * 상품 ID로 상품 조회
+     * @param productId
+     * @param useYn
+     * @return Optional<Product>
+     */
     @Override
     public Optional<Product> findByProductIdAndUseYn(Long productId, String useYn) {
         return productRepository.findByProductIdAndUseYn(productId, useYn);
     }
 
-    // 특정시점 상품이력 존재상품 검색
+    /**
+     * 특정 시점 상품 이력 조회
+     * @param productId
+     * @param time
+     * @param useYn
+     * @return Optional<ProductHistory>
+     */
     @Override
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public Optional<ProductHistory> findProductInfoAtTimeUseYn(Long productId, LocalDateTime time, String useYn) {
