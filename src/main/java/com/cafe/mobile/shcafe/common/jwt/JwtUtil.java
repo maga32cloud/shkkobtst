@@ -55,7 +55,7 @@ public class JwtUtil {
                 .signWith(secretKey)
                 .compact();
 
-        return "Bearer " + token;
+        return token;
     }
 
     // 현재 로그인된 멤버ID 조회
