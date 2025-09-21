@@ -45,7 +45,7 @@ public class MemberController {
                 .build());
     }
 
-    @Operation(summary = "로그인", description = "회원 로그인을 수행하고 JWT 토큰을 반환합니다.")
+    @Operation(summary = "로그인", description = "회원 로그인을 수행하고 JWT 토큰을 반환합니다. 헤더로 내려온 토큰을 swagger 위쪽 Authorize에 넣으시면 쉽게 테스트가 가능합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "로그인 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),

@@ -163,6 +163,22 @@ src/main/java/com/cafe/mobile/shcafe/
 
 ## 📝 API 문서
 
+![image](https://github.com/maga32cloud/shkkobtst/blob/description/API.png)
+
+[>> PDF 파일로 보기 <<](https://github.com/maga32cloud/shkkobtst/blob/description/SH%20Cafe%20API.pdf)
+
+서버 실행 후 swagger를 통해 상세한 문서와 테스트를 하실 수 있습니다.
+```
+기본 접속url : http://localhost:8080/swagger-ui/index.html
+```
+
+- 기본적으로 로그인 해야 사용할 수 있는 기능과 로그인 없이 사용 가능한 기능이 있습니다.
+- 회원 api로 가입 후, 로그인 api로 ID와 비밀번호를 입력하시면 jwt토큰이 authorization: 헤더로 내려옵니다 (아래와 같은 형식)
+```
+eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6Im1hZ2EzMiIsImlhdCI6MTc1ODQ0NzY2MSwiZXhwIjoxNzU4NDUxMjYxfQ.izupHqBVATgHMMZ8TleSY_KEd_AuOix_ZsaXoYisVjI 
+```
+- 해당 내용을 복사하여 맨 위의 Authorize 부분에 입력하시면 따로 헤더 설정하실 필요 없이 기능들을 이용하실 수 있습니다.
+
 각 컨트롤러별 API 엔드포인트는 다음과 같습니다:
 
 - **MemberController**: 회원 관련 API
