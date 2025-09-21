@@ -7,10 +7,7 @@ import com.cafe.mobile.shcafe.order.dto.response.OrderCreateResponse;
 import com.cafe.mobile.shcafe.order.service.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/order")
 @RestController
@@ -30,6 +27,16 @@ public class OrderController {
         return ResponseEntity.ok(AppResponse.<OrderCreateResponse>builder()
                 .code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message())
                 .data(order)
+                .build());
+    }
+
+    // 주문 취소
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<AppResponse<Void>> cancelOrder(@PathVariable Long orderId) {
+        orderService.cancelOrder(orderId);
+
+        return ResponseEntity.ok(AppResponse.<Void>builder()
+                .code(ResponseType.SUCCESS.code()).message(ResponseType.SUCCESS.message())
                 .build());
     }
 

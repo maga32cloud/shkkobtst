@@ -20,12 +20,16 @@ public enum ResponseType {
     ORDER_PRICE_MISMATCH("B205", "현재 상품과 가격정보가 일치히지 않습니다."),
     // 주문관련
     INVALID_ORDER("B304", "존재하지 않는 주문입니다."),
+    ALREADY_PICKED_UP("B340", "이미 픽업된 주문입니다."),
+    ALREADY_CANCELLED("B390", "이미 취소된 주문입니다."),
     // 결제관련
     PAY_PENDING("B400", "결제가 진행중입니다."),
+    NO_PAYMENT("B404", "결제내역이 존재하지 않습니다."),
+    PAY_PRICE_MISMATCH("B405", "결제 금액과 주문 금액이 일치하지 않습니다."),
     PAY_IN_PROGRESS("B409", "이미 결제가 진행중인 내역입니다."),
     ALREADY_PAID("B410", "이미 결제된 내역입니다."),
     PAY_CANCELED("B490", "취소된 결제입니다."),
-    PAY_PRICE_MISMATCH("B405", "결제 금액과 주문 금액이 일치하지 않습니다."),
+    CANCEL_PAY_ERRER("B990", "결제취소중 오류가 발생했습니다. 다시 시도해주세요."),
 
     ERROR("999", "오류가 발생했습니다.")
     ;

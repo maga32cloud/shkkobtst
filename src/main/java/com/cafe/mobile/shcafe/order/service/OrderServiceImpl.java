@@ -1,7 +1,9 @@
 package com.cafe.mobile.shcafe.order.service;
 
+import com.cafe.mobile.shcafe.order.event.OrderCancelledEvent;
 import com.cafe.mobile.shcafe.common.exception.BizException;
 import com.cafe.mobile.shcafe.common.jwt.JwtUtil;
+import com.cafe.mobile.shcafe.common.type.OrderStsCdConst;
 import com.cafe.mobile.shcafe.common.type.ResponseType;
 import com.cafe.mobile.shcafe.member.entity.Member;
 import com.cafe.mobile.shcafe.member.service.MemberService;
@@ -14,6 +16,7 @@ import com.cafe.mobile.shcafe.product.entity.Product;
 import com.cafe.mobile.shcafe.product.entity.ProductHistory;
 import com.cafe.mobile.shcafe.product.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,11 +31,13 @@ public class OrderServiceImpl implements OrderService {
     private final MemberService memberService;
     private final ProductService productService;
     private final JwtUtil jwtUtil;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public OrderServiceImpl(OrderRepository orderRepository, MemberService memberService, ProductService productService, JwtUtil jwtUtil) {
+    public OrderServiceImpl(OrderRepository orderRepository, MemberService memberService, ProductService productService, JwtUtil jwtUtil, ApplicationEventPublisher eventPublisher) {
         this.orderRepository = orderRepository;
         this.productService = productService;
         this.memberService = memberService;
+        this.eventPublisher = eventPublisher;
         this.jwtUtil = jwtUtil;
     }
 
@@ -85,6 +90,43 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 
+    // 주문 취소
+    @Override
+    @Transactional
+    public void cancelOrder(Long orderId) {
+        // JWT로 현재 사용자 확인
+        String currentMemberId = jwtUtil.getCurrentMemberId();
+
+        // 주문 존재 여부 확인 및 소유자 확인
+        Orders order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new BizException(ResponseType.INVALID_ORDER));
+
+        if (!(currentMemberId).equals(order.getMember().getMemberId())) {
+            throw new BizException(ResponseType.NOT_ALLOWED);
+        }
+
+        // 결제여부
+        boolean isPaid = true;
+
+        // 주문 상태 확인 (이미 취소되었거나 픽업된 주문은 회원이 취소 불가)
+        switch (order.getOrderStsCd()) {
+            case OrderStsCdConst.PAYMENT_PENDING: isPaid = false;
+                break;
+            case OrderStsCdConst.USER_CANCELLED:
+            case OrderStsCdConst.STORE_CANCELLED: throw new BizException(ResponseType.ALREADY_CANCELLED);
+            case OrderStsCdConst.PICKED_UP: throw new BizException(ResponseType.ALREADY_PICKED_UP);
+        }
+
+        // 주문 상태를 취소로 변경
+        order.setOrderStsCd(OrderStsCdConst.USER_CANCELLED);
+        orderRepository.save(order);
+
+        // 결제가 진행됐다면 취소 이벤트 발행
+        if(isPaid) {
+            eventPublisher.publishEvent(new OrderCancelledEvent(this, orderId, currentMemberId));
+        }
+    }
+
     // ID로 찾기
     @Override
     public Optional<Orders> findById(Long orderId) {
@@ -93,10 +135,11 @@ public class OrderServiceImpl implements OrderService {
 
     // 주문상태변경
     @Override
+    @Transactional
     public void transOrderStatus(Long orderId, String orderStsCd) {
         orderRepository.findById(orderId).ifPresentOrElse(
-            order -> order.setOrderStsCd(orderStsCd),
-            () -> log.warn("주문ID {} 이 존재하지 않아 상태 변경 실패", orderId)
+            orders -> orders.setOrderStsCd(orderStsCd),
+            () -> log.warn("주문ID {} 이 존재하지 않아 상태 변경 실패", orderId) // TODO: 재시도 로직 작성
         );
     }
 

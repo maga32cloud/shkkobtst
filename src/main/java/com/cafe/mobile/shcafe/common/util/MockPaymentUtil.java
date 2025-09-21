@@ -1,4 +1,4 @@
-package com.cafe.mobile.shcafe.payment.util;
+package com.cafe.mobile.shcafe.common.util;
 
 import java.util.Random;
 

@@ -5,6 +5,7 @@ import com.cafe.mobile.shcafe.common.jwt.JwtUtil;
 import com.cafe.mobile.shcafe.common.type.OrderStsCdConst;
 import com.cafe.mobile.shcafe.common.type.PayStsCdConst;
 import com.cafe.mobile.shcafe.common.type.ResponseType;
+import com.cafe.mobile.shcafe.common.util.MockPaymentUtil;
 import com.cafe.mobile.shcafe.member.entity.Member;
 import com.cafe.mobile.shcafe.member.service.MemberService;
 import com.cafe.mobile.shcafe.order.entity.Orders;
@@ -13,7 +14,7 @@ import com.cafe.mobile.shcafe.payment.dto.request.PaymentCreateRequest;
 import com.cafe.mobile.shcafe.payment.dto.response.PaymentCreateResponse;
 import com.cafe.mobile.shcafe.payment.entity.Payment;
 import com.cafe.mobile.shcafe.payment.repository.PaymentRepository;
-import com.cafe.mobile.shcafe.payment.util.MockPaymentUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
@@ -123,6 +125,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     // 결제 mock(Transaction Exeption 전파 분리)
+    @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public String mockPaymentTest(Payment payment) {
         try {
@@ -130,5 +133,17 @@ public class PaymentServiceImpl implements PaymentService {
         } catch(Exception e) {
             return "결제오류";
         }
+    }
+
+    @Override
+    @Transactional
+    public Optional<Payment> findTopByOrderOrderIdOrderByPaymentIdDesc(Long paymentId) {
+        return paymentRepository.findTopByOrderOrderIdOrderByPaymentIdDesc(paymentId);
+    }
+
+    @Override
+    @Transactional
+    public Payment save(Payment payment) {
+        return paymentRepository.save(payment);
     }
 }

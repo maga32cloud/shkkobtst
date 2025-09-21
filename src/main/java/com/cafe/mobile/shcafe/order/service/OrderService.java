@@ -13,4 +13,6 @@ public interface OrderService {
     Optional<Orders> findById(Long orderId);
 
     void transOrderStatus(Long orderId, String orderStsCd);
+
+    void cancelOrder(Long orderId);
 }
